@@ -31,6 +31,13 @@ class MailFormTest < ActiveSupport::TestCase
     
     sample.email = ""
     assert !sample.email?
-    
+  end
+  
+  test "can retrieve all attributes values" do
+    sample = SampleMail.new
+    sample.name = "John Doe"
+    sample.email = "john.doe@example.com"
+    assert_equal("John Doe", sample.attributes["name"])
+    assert_equal("john.doe@example.com", sample.attributes["email"])
   end
 end
