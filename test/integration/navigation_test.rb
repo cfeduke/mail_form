@@ -22,6 +22,21 @@ class NavigationTest < ActiveSupport::IntegrationCase
     assert_equal(["john.doe@example.com"], mail.from)
     assert_equal(["recipient@example.com"], mail.to)
     assert_match(/Message: MailForm rocks!/, mail.body.encoded)
+  end
+  
+  test "unable to send a message if the hidden nickname field is supplied" do
+    visit "/"
+    
+    fill_in "Name",     :with => "John Doe"
+    fill_in "Nickname", :with => "Secret Spammer"
+    fill_in "Email",    :with => "john.doe@example.com"
+    fill_in "Message",  :with => "V1AGR@!!! <<<SPAM>>>"
+    
+    click_button "Deliver"
+    
+    assert_match(/is invalid/, page.body)
+    
+    assert_equal(0, ActionMailer::Base.deliveries.size)
     
   end
 end
