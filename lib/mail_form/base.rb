@@ -29,6 +29,14 @@ module MailForm
       false
     end
     
+    def deliver
+      if valid?
+        MailForm::Notifier.contact(self).deliver
+      else
+        false
+      end
+    end
+    
     protected
     def clear_attribute(attribute)
       send("#{attribute}=", nil)
@@ -37,5 +45,6 @@ module MailForm
     def attribute?(attribute)
       send(attribute).present?
     end
+    
   end
 end
