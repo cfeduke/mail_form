@@ -6,4 +6,16 @@ class SampleMail < MailForm::Base
   def headers
     { :to => "recipient@example.com", :from => self.email }
   end
+  
+  before_deliver do
+    callbacks << :before
+  end
+  
+  after_deliver do
+    callbacks << :after
+  end
+  
+  def callbacks
+    @callbacks ||= []
+  end
 end

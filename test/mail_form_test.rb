@@ -7,11 +7,17 @@ class MailFormTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries.clear
   end
   
+  test "provides before and after deliver hooks" do
+    sample = SampleMail.new
+    sample.deliver
+    assert_equal([:before, :after], sample.callbacks)
+    
+  end
+  
   test "validates absence of nickname" do
     sample = SampleMail.new(:nickname => "Spam")
     assert !sample.valid?
     assert_equal(["is invalid"], sample.errors[:nickname])
-    
   end
   
   test "delivers an email with attributes" do

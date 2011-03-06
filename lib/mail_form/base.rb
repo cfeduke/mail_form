@@ -6,6 +6,9 @@ module MailForm
     extend ActiveModel::Translation
     include ActiveModel::Validations
     include MailForm::Validators
+    extend ActiveModel::Callbacks
+    
+    define_model_callbacks :deliver
 
     class_attribute :_attributes
     self._attributes = []
@@ -38,7 +41,9 @@ module MailForm
     
     def deliver
       if valid?
-        MailForm::Notifier.contact(self).deliver
+        _run_deliver_callbacks do
+          MailForm::Notifier.contact(self).deliver
+        end
       else
         false
       end
